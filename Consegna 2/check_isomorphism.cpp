@@ -89,21 +89,23 @@ node *build_euler() {
 }
 
 struct Frame{
-    // value obtained by computation and to "propagate up" 
+    // "propagating" value obtained by local computation
     int* upper_result;
 
     node* A;
     node* B;
     
-    // values delegations
+    // "delegate" values obtained by lower level computations
     int AL_BL = -1;
     int AR_BR = -1;
     int AL_BR = -1;
     int AR_BL = -1;
 };
 
-
-
+// This algorithm is not optimal because to check if two nodes are isomorphic, all 4 "tours" are 
+// evaluated before the answer is given. In the recursive code, we can notice a best case scenario
+// where only the first combination is evaluated (only 2 tours). The other combination is evaluated 
+// only if the first one gives a negative result, making the algorithm more efficient.
 bool Isomorphism(node* root1, node* root2) {
     stack<Frame*> execution_stack;
 
@@ -113,59 +115,60 @@ bool Isomorphism(node* root1, node* root2) {
 
     execution_stack.push(roots);
 
+    // Emulation of C++ default execution stack used in recursive methods
     while(!execution_stack.empty()) {
         Frame* top = new Frame;
         top = execution_stack.top();
 
         if(top->A == NULL && top->B == NULL) {
-            *(top->upper_result) = 1;
+            if(top != roots) *(top->upper_result) = 1;
             execution_stack.pop();
         }
         else if(top->A != NULL && top->B == NULL) {
-            *(top->upper_result) = 0;
+            if(top != roots) *(top->upper_result) = 0;
             execution_stack.pop();
         }
         else if(top->B != NULL && top->A == NULL) {
-            *(top->upper_result) = 0;
+            if(top != roots) *(top->upper_result) = 0;
             execution_stack.pop();
         }
         else {
-
             if(top->AL_BL == 1 && top->AR_BR == 1 || top->AL_BR == 1 && top->AR_BL == 1) {
-                if(top != roots)
-                    *(top->upper_result) = 1;
-
+                if(top != roots) *(top->upper_result) = 1;
                 execution_stack.pop();
             } else if((top->AL_BL == 0 || top->AR_BR == 0) && (top->AL_BR == 0 || top->AR_BL == 0)) {
-                if(top != roots)
-                    *(top->upper_result) = 0;
-                    
+                if(top != roots) *(top->upper_result) = 0;
                 execution_stack.pop();
+            } else {
+
+                // Second combination - Tour AR_BL                
+                Frame* new_frame = new Frame;
+                new_frame->A = top->A->R;
+                new_frame->B = top->B->L;
+                new_frame->upper_result = &(top->AR_BL);
+                execution_stack.push(new_frame);
+
+                // Second combination - Tour AL_BR
+                new_frame = new Frame;
+                new_frame->A = top->A->L;
+                new_frame->B = top->B->R;
+                new_frame->upper_result = &(top->AL_BR);
+                execution_stack.push(new_frame);
+
+                // First combination - Tour AR_BR
+                new_frame = new Frame;
+                new_frame->A = top->A->R;
+                new_frame->B = top->B->R;
+                new_frame->upper_result = &(top->AR_BR);
+                execution_stack.push(new_frame);
+
+                // Second combination - Tour AL_BL
+                new_frame = new Frame;
+                new_frame->A = top->A->L;
+                new_frame->B = top->B->L;
+                new_frame->upper_result = &(top->AL_BL);
+                execution_stack.push(new_frame);
             }
-
-            Frame* new_frame = new Frame;
-            new_frame->A = top->A->R;
-            new_frame->B = top->B->R;
-            new_frame->upper_result = &(top->AR_BR);
-            execution_stack.push(new_frame);
-
-            new_frame = new Frame;
-            new_frame->A = top->A->L;
-            new_frame->B = top->B->R;
-            new_frame->upper_result = &(top->AL_BR);
-            execution_stack.push(new_frame);
-
-            new_frame = new Frame;
-            new_frame->A = top->A->R;
-            new_frame->B = top->B->L;
-            new_frame->upper_result = &(top->AR_BL);
-            execution_stack.push(new_frame);
-
-            new_frame = new Frame;
-            new_frame->A = top->A->L;
-            new_frame->B = top->B->L;
-            new_frame->upper_result = &(top->AL_BL);
-            execution_stack.push(new_frame);
         } 
     }
 
