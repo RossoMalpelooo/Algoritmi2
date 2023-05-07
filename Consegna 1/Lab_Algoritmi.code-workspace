@@ -1,0 +1,33 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"ostream": "cpp",
+			"*.tcc": "cpp",
+			"fstream": "cpp",
+			"array": "cpp",
+			"concepts": "cpp",
+			"deque": "cpp",
+			"string": "cpp",
+			"unordered_map": "cpp",
+			"vector": "cpp",
+			"memory": "cpp",
+			"optional": "cpp",
+			"string_view": "cpp",
+			"istream": "cpp",
+			"sstream": "cpp",
+			"streambuf": "cpp",
+			"functional": "cpp",
+			"tuple": "cpp",
+			"type_traits": "cpp",
+			"iosfwd": "cpp",
+			"new": "cpp",
+			"cmath": "cpp",
+			"iostream": "cpp"
+		}
+	}
+}
