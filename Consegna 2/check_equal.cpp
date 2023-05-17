@@ -1,3 +1,8 @@
+/**
+ * @author Leonardo Ongari - 324034
+ * @date 07/05/2023
+*/
+
 #include <iostream>
 #include <fstream>
 
@@ -76,6 +81,8 @@ node *build_euler() {
         i++;
     }
 
+    if(i == 0) return NULL;
+
     node* root = new node;
 
     root->val = euler_nodes[0];
@@ -87,10 +94,10 @@ node *build_euler() {
 
 bool Equal(node* n1, node* n2) {
     
-    if(n1 == nullptr && n2 == nullptr) return true;
-    if(n1 == nullptr && n2 != nullptr) return false;
-    if(n1 != nullptr && n2 == nullptr) return false;
-    if(n1 != nullptr && n2 != nullptr)
+    if(n1 == NULL && n2 == NULL) return true;
+    if(n1 == NULL && n2 != NULL) return false;
+    if(n1 != NULL && n2 == NULL) return false;
+    if(n1 != NULL && n2 != NULL)
         if(n1->val == n2->val)
             if(Equal(n1->L, n2->L) && Equal(n1->R, n2->R))
                 return true;
@@ -98,6 +105,10 @@ bool Equal(node* n1, node* n2) {
 }
 
 void inOrder(node *n) {
+    if(n == NULL) {
+        cout << "albero vuoto" << endl;
+        return;
+    } 
 
     if (n->L != NULL) {
         inOrder(n->L);

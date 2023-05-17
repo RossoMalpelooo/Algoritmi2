@@ -1,3 +1,8 @@
+/**
+ * @author Leonardo Ongari - 324034
+ * @date 07/05/2023
+*/
+
 #include <iostream>
 #include <stack>
 #include <optional>
@@ -79,6 +84,8 @@ node *build_euler() {
         i++;
     }
 
+    if(i == 0) return NULL;
+
     node* root = new node;
 
     root->val = euler_nodes[0];
@@ -121,24 +128,26 @@ bool Isomorphism(node* root1, node* root2) {
         top = execution_stack.top();
 
         if(top->A == NULL && top->B == NULL) {
-            if(top != roots) *(top->upper_result) = 1;
             execution_stack.pop();
+            if(top != roots) *(top->upper_result) = 1;
+            else return true;
         }
         else if(top->A != NULL && top->B == NULL) {
-            if(top != roots) *(top->upper_result) = 0;
             execution_stack.pop();
+            if(top != roots) *(top->upper_result) = 0;
         }
         else if(top->B != NULL && top->A == NULL) {
-            if(top != roots) *(top->upper_result) = 0;
             execution_stack.pop();
+            if(top != roots) *(top->upper_result) = 0;
         }
         else {
             if(top->AL_BL == 1 && top->AR_BR == 1 || top->AL_BR == 1 && top->AR_BL == 1) {
+                execution_stack.pop();
                 if(top != roots) *(top->upper_result) = 1;
-                execution_stack.pop();
+                else return true;
             } else if((top->AL_BL == 0 || top->AR_BR == 0) && (top->AL_BR == 0 || top->AR_BL == 0)) {
-                if(top != roots) *(top->upper_result) = 0;
                 execution_stack.pop();
+                if(top != roots) *(top->upper_result) = 0;
             } else {
 
                 // Second combination - Tour AR_BL                
