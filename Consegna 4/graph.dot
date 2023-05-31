@@ -1,0 +1,117 @@
+digraph g
+{ 
+node [shape=none]
+rankdir="TB"
+node_0_0
+[ shape = oval; fillcolor = "0.0 0.0 inf"; style=filled; label = "Idx: 0, dist: INF, val: 0" ];
+node_0_0 -> node_1_0 [ label="1", len=0.1 ]
+node_0_0 -> node_9_0 [ label="100", len=10 ]
+node_1_0
+[ shape = oval; fillcolor = "0.0 0.0 inf"; style=filled; label = "Idx: 1, dist: INF, val: 2" ];
+node_1_0 -> node_2_0 [ label="1", len=0.1 ]
+node_1_0 -> node_9_0 [ label="98", len=9.8 ]
+node_2_0
+[ shape = oval; fillcolor = "0.0 0.0 inf"; style=filled; label = "Idx: 2, dist: INF, val: 4" ];
+node_2_0 -> node_3_0 [ label="1", len=0.1 ]
+node_2_0 -> node_9_0 [ label="96", len=9.6 ]
+node_3_0
+[ shape = oval; fillcolor = "0.0 0.0 inf"; style=filled; label = "Idx: 3, dist: INF, val: 6" ];
+node_3_0 -> node_4_0 [ label="1", len=0.1 ]
+node_3_0 -> node_9_0 [ label="94", len=9.4 ]
+node_4_0
+[ shape = oval; fillcolor = "0.0 0.0 inf"; style=filled; label = "Idx: 4, dist: INF, val: 8" ];
+node_4_0 -> node_5_0 [ label="1", len=0.1 ]
+node_4_0 -> node_9_0 [ label="92", len=9.2 ]
+node_5_0
+[ shape = oval; fillcolor = "0.0 0.0 inf"; style=filled; label = "Idx: 5, dist: INF, val: 10" ];
+node_5_0 -> node_6_0 [ label="1", len=0.1 ]
+node_5_0 -> node_9_0 [ label="90", len=9 ]
+node_6_0
+[ shape = oval; fillcolor = "0.0 0.0 inf"; style=filled; label = "Idx: 6, dist: INF, val: 12" ];
+node_6_0 -> node_7_0 [ label="1", len=0.1 ]
+node_6_0 -> node_9_0 [ label="88", len=8.8 ]
+node_7_0
+[ shape = oval; fillcolor = "0.0 0.0 inf"; style=filled; label = "Idx: 7, dist: INF, val: 14" ];
+node_7_0 -> node_8_0 [ label="1", len=0.1 ]
+node_7_0 -> node_9_0 [ label="86", len=8.6 ]
+node_8_0
+[ shape = oval; fillcolor = "0.0 0.0 inf"; style=filled; label = "Idx: 8, dist: INF, val: 16" ];
+node_8_0 -> node_9_0 [ label="84", len=8.4 ]
+node_9_0
+[ shape = oval; fillcolor = "0.0 0.0 inf"; style=filled; label = "Idx: 9, dist: INF, val: 18" ];
+node_0_1
+[ shape = oval; fillcolor = "0.0 0.0 -nan"; style=filled; label = "Idx: 0, dist: 0, val: 0" ];
+node_0_1 -> node_1_1 [ label="1", len=0.1 ]
+node_0_1 -> node_9_1 [ label="100", len=10 ]
+node_1_1
+[ shape = oval; fillcolor = "0.0 0.0 inf"; style=filled; label = "Idx: 1, dist: INF, val: 2" ];
+node_1_1 -> node_2_1 [ label="1", len=0.1 ]
+node_1_1 -> node_9_1 [ label="98", len=9.8 ]
+node_2_1
+[ shape = oval; fillcolor = "0.0 0.0 inf"; style=filled; label = "Idx: 2, dist: INF, val: 4" ];
+node_2_1 -> node_3_1 [ label="1", len=0.1 ]
+node_2_1 -> node_9_1 [ label="96", len=9.6 ]
+node_3_1
+[ shape = oval; fillcolor = "0.0 0.0 inf"; style=filled; label = "Idx: 3, dist: INF, val: 6" ];
+node_3_1 -> node_4_1 [ label="1", len=0.1 ]
+node_3_1 -> node_9_1 [ label="94", len=9.4 ]
+node_4_1
+[ shape = oval; fillcolor = "0.0 0.0 inf"; style=filled; label = "Idx: 4, dist: INF, val: 8" ];
+node_4_1 -> node_5_1 [ label="1", len=0.1 ]
+node_4_1 -> node_9_1 [ label="92", len=9.2 ]
+node_5_1
+[ shape = oval; fillcolor = "0.0 0.0 inf"; style=filled; label = "Idx: 5, dist: INF, val: 10" ];
+node_5_1 -> node_6_1 [ label="1", len=0.1 ]
+node_5_1 -> node_9_1 [ label="90", len=9 ]
+node_6_1
+[ shape = oval; fillcolor = "0.0 0.0 inf"; style=filled; label = "Idx: 6, dist: INF, val: 12" ];
+node_6_1 -> node_7_1 [ label="1", len=0.1 ]
+node_6_1 -> node_9_1 [ label="88", len=8.8 ]
+node_7_1
+[ shape = oval; fillcolor = "0.0 0.0 inf"; style=filled; label = "Idx: 7, dist: INF, val: 14" ];
+node_7_1 -> node_8_1 [ label="1", len=0.1 ]
+node_7_1 -> node_9_1 [ label="86", len=8.6 ]
+node_8_1
+[ shape = oval; fillcolor = "0.0 0.0 inf"; style=filled; label = "Idx: 8, dist: INF, val: 16" ];
+node_8_1 -> node_9_1 [ label="84", len=8.4 ]
+node_9_1
+[ shape = oval; fillcolor = "0.0 0.0 inf"; style=filled; label = "Idx: 9, dist: INF, val: 18" ];
+heap_node0_0
+[ shape = oval; label = "Idx: 0, val: 0"];
+heap_node0_0->heap_node1_0; 
+
+heap_node0_0->heap_node2_0; 
+
+heap_node1_0
+[ shape = oval; label = "Idx: 1, val: 1000000"];
+heap_node1_0->heap_node3_0; 
+
+heap_node1_0->heap_node4_0; 
+
+heap_node2_0
+[ shape = oval; label = "Idx: 2, val: 1000000"];
+heap_node2_0->heap_node5_0; 
+
+heap_node2_0->heap_node6_0; 
+
+heap_node3_0
+[ shape = oval; label = "Idx: 3, val: 1000000"];
+heap_node3_0->heap_node7_0; 
+
+heap_node3_0->heap_node8_0; 
+
+heap_node4_0
+[ shape = oval; label = "Idx: 4, val: 1000000"];
+heap_node4_0->heap_node9_0; 
+
+heap_node5_0
+[ shape = oval; label = "Idx: 5, val: 1000000"];
+heap_node6_0
+[ shape = oval; label = "Idx: 6, val: 1000000"];
+heap_node7_0
+[ shape = oval; label = "Idx: 7, val: 1000000"];
+heap_node8_0
+[ shape = oval; label = "Idx: 8, val: 1000000"];
+heap_node9_0
+[ shape = oval; label = "Idx: 9, val: 1000000"];
+}
