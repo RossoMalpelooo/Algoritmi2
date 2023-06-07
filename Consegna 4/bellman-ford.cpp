@@ -270,10 +270,10 @@ bool bellman_ford(int n)
     V_dist[n] = 0; // la distanza da se stesso è 0
 
     // numero di nodi |V|
-    for (int i = n; i < n_nodi - 1; i++)
+    for (int i = 0; i < n_nodi - 1; i++)
     {
         // numero di archi |E| (includendo esplorazione lista)
-        for (int j = n; j < n_nodi; j++)
+        for (int j = 0; j < n_nodi; j++)
         {
             V_visitato[j] = 1;
             graph_print();
@@ -486,7 +486,7 @@ int main(int argc, char **argv)
 
     list_insert_front(E[2], 3, 1);
 
-    list_insert_front(E[3], 1, 2);
+    // list_insert_front(E[3], 1, 2); // decommentare per cicli negativi
 
     /// TASK: esercitarsi sulla generazione dei dati su cui lavorare tramite algoritmi
 
@@ -503,6 +503,7 @@ int main(int argc, char **argv)
     bool path_found = bellman_ford(0);
 
     path_found ? cout << "risultato corretto" << endl : cout << "cicli negativi" << endl;
+    path_found ? output_graph << "risultato_corretto" << endl : output_graph << "cicli_negativi" << endl;
 
     if (graph)
     {
