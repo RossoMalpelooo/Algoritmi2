@@ -17,6 +17,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <queue>
 
 #define INFTY 1000000
 
@@ -59,6 +60,20 @@ list_t **E; /// array di puntatori a le liste di adiacenza per ogni nodo
 int n_nodi;
 int heap_size = 0;
 int max_cost = 0;
+
+/// percorsi migliori
+
+graph_node *first_path;
+float index_first = 0.0;
+graph_node *second_path;
+float index_second = 0.0;
+graph_node *third_path;
+float index_third = 0.0;
+
+int visited_nodes = 0;
+int total_distance = 0;
+float val_index; // indice di valutazione
+queue<int> path;
 
 ifstream exam_file;
 
@@ -463,8 +478,20 @@ void delete_tree(tree_node_t *elem)
     }
 }
 
-/// @brief riporta le componenti del grafo ai valori iniziali per calcolare shortest path su un nodo differente
-void reset_graph()
+void delete_path(graph_node_t *elem)
+{
+    if (elem->next == NULL)
+    {
+        delete elem;
+    }
+    else
+    {
+        delete_path(elem->next);
+    }
+}
+
+/// @brief riporta le componenti del ai valori iniziali per riutilizzare le variabili
+void reset()
 {
     delete[] V_prev;
     delete[] V_dist;
@@ -482,6 +509,12 @@ void reset_graph()
         V_prev[i] = -1;    // non c'e' precedente
         V_dist[i] = INFTY; // infinito
     }
+
+    delete_path(first_path);
+    delete_path(second_path);
+    delete_path(third_path);
+
+    index_first = index_second = index_third = 0;
 }
 
 /// @brief inverte i pesi degli archi in modo da adattare i dati per lanciare shortest path
@@ -545,6 +578,8 @@ void add_children(tree_node_t *parent, int child_idx)
     }
 }
 
+/// @brief stampa il sottoalbero con radice = node  -bug-
+/// @param node
 void print_tree(tree_node_t *node)
 {
     if (node == NULL)
@@ -570,7 +605,9 @@ void print_tree(tree_node_t *node)
 /// @param n indice del nodo su cui è stato eseguito shortest path
 void create_tree(tree_node_t *elem)
 {
-    cout << "creo albero su indice " << elem->val << endl;
+    // Euler Tour pre-order
+    // cout << elem->val << " ";
+
     for (int i = 0; i < n_nodi; i++)
     {
         if (V_prev[i] == elem->val)
@@ -580,14 +617,135 @@ void create_tree(tree_node_t *elem)
         }
     }
 
-    // print_node(elem);
+    cout << "albero con radice = " << elem->val << endl;
+    print_node(elem);
+    cout << endl;
 
     tree_node_t *child = elem->children_head;
     while (child != NULL)
     {
-        // create_tree(child);
+        create_tree(child);
         child = child->next;
     }
+
+    // Euler Tour post-order
+    // cout << elem->val << " ";
+
+    // print_tree(elem);
+}
+
+/// @brief trova e stampa, tramite DFS, i 3 percorsi più comuni.
+/// Il criterio di comparazione è influenzato dalla distanza totale del percorso (deve essere minimale)
+///                                           e dal numero di nodi toccati (deve essere massimale)
+/// @param node
+void find_best(tree_node_t *node)
+{
+    visited_nodes++;
+    total_distance = V_dist[node->val];
+    path.push(node->val);
+
+    if (node->children_head != NULL)
+    {
+        tree_node_t *child = node->children_head;
+        while (child != NULL)
+        {
+            find_best(child);
+            child = child->next;
+        }
+    }
+    else
+    {
+        val_index = (float)visited_nodes / total_distance;
+
+        // se l'indice è migliore del terzo percorso, sostituisco, poi si procede per transitività, eseguendo swap
+        if (val_index > index_third)
+        {
+            cout << "percorso migliorato: " << visited_nodes << " / " << total_distance << " = " << val_index << " > " << index_third << endl;
+            index_third = val_index;
+            delete_path(third_path);
+            third_path = new graph_node_t;
+            cout << "nuovo: ";
+
+            third_path->val = path.front();
+            path.pop();
+            third_path->next = new graph_node_t;
+
+            graph_node* it = third_path->next;
+            while (!path.empty())
+            {
+                it->val = path.front();
+                cout << path.front() << " -> ";
+                path.pop();
+                it->next = new graph_node_t;
+                it = it->next;
+            }
+            cout << "end" << endl;
+        }
+
+        if (index_third > index_second)
+        {
+            cout << "third > second (" << index_third << " > " << index_second << ")" << endl;
+            // swap degli indici
+            float tmp_idx = index_second;
+            index_second = index_third;
+            index_third = tmp_idx;
+
+            graph_node_t *tmp_node = second_path;
+            second_path = third_path;
+            third_path = tmp_node;
+        }
+
+        if (index_second > index_first)
+        {
+            cout << "second > first (" << index_second << " > " << index_first << ")" << endl;
+            // swap degli indici
+            float tmp_idx = index_first;
+            index_first = index_second;
+            index_second = tmp_idx;
+
+            graph_node_t *tmp_node = first_path;
+            first_path = second_path;
+            second_path = tmp_node;
+        }
+
+        total_distance = 0;
+        visited_nodes = 0;
+    }
+}
+
+void print_paths()
+{
+    graph_node *it = first_path;
+    cout << "1) IDX: " << index_first << "; path: ";
+    while (it != NULL)
+    {
+        cout << it->val << " -> ";
+        graph_node_t *tmp = it;
+        it = it->next;
+    }
+    cout << "end" << endl;
+
+    it = second_path;
+    cout << "2) IDX: " << index_second << "; path: ";
+    while (it != NULL)
+    {
+        cout << it->val << " -> ";
+        graph_node_t *tmp = it;
+        it = it->next;
+    }
+    cout << "end" << endl;
+
+    it = third_path;
+    cout << "3) IDX: " << index_third << "; path: ";
+    while (it != NULL)
+    {
+        cout << it->val << " -> ";
+        graph_node_t *tmp = it;
+        it = it->next;
+    }
+    cout << "end" << endl;
+
+    cout << endl;
 }
 
 int main(int argc, char **argv)
@@ -646,15 +804,22 @@ int main(int argc, char **argv)
         tree_root->next = NULL;
         create_tree(tree_root); /// generare un albero invertendo i dati contenuti in V_prev
 
+        // return 0;
         // cout << i << " create_tree() OK" << endl;
 
-        /// lanciare DFS sull'albero per valutare i percorsi migliori dati dalla generazione del grafo
-
+        /// lanciare DFS sull'albero e valutare i(l) percorsi(o) migliori(e) dati dalla generazione del grafo
+        /// +
         /// memorizzare i percorsi migliori per confronto
+        first_path = new graph_node_t;
+        second_path = new graph_node_t;
+        third_path = new graph_node_t;
+        find_best(tree_root);
 
-        reset_graph();
+        print_paths();
 
-        // cout << i << " reset_graph() OK" << endl;
+        reset();
+
+        // cout << i << " reset() OK" << endl;
 
         // cout << endl
         //      << "Array resettati " << i << ": " << endl;
