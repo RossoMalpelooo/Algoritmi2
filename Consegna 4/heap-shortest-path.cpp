@@ -145,10 +145,6 @@ void heap_insert(int cost, int graph_index)
     if (details)
         printf("Inserisco elemento %d in posizione %d\n", cost, heap_size);
 
-    cout << endl
-         << endl
-         << "heap_size: " << heap_size << endl
-         << endl;
     if (heap_size < n_nodi)
     {
         int i = heap_size;
@@ -200,13 +196,19 @@ void decrease_key(int indice_nodo, int key)
 
     if (indice_nodo < 0 || indice_nodo >= heap_size)
     {
-        printf("Nodo non esistente\n");
+        printf("Nodo non esistente ");
+        cout << "(" << indice_nodo << ")" << endl;
+        cout << "graph_index: " << min_heap_queue[indice_nodo].graph_index << endl;
+        cout << "heap_size: " << heap_size << endl;
         return;
     }
 
     if (min_heap_queue[indice_nodo].cost < key)
     {
-        printf("la chiave corrente non e' piu' piccola!\n");
+        printf("la chiave corrente non e' piu' piccola! ");
+        cout << min_heap_queue[indice_nodo].cost << " - " << key << endl;
+        cout << "(" << indice_nodo << ")" << endl;
+        cout << "graph_index: " << min_heap_queue[indice_nodo].graph_index << endl;
         return;
     }
 
@@ -251,12 +253,12 @@ void heap_remove_min()
     /// il minimo e' stato spostato in fondo --> pronto per l'eliminazione
     pair_t t = min_heap_queue[0];
 
+    int index = min_heap_queue[0].graph_index;          //
     min_heap_queue[0] = min_heap_queue[heap_size - 1];
-    int index = min_heap_queue[0].graph_index;
     heap_indexes[index] = -1; // l'elemento verrà rimosso
 
+    index = min_heap_queue[heap_size - 1].graph_index;  
     min_heap_queue[heap_size - 1] = t;
-    index = min_heap_queue[heap_size - 1].graph_index;
     heap_indexes[index] = 0;
 
     // elimino il minimo (ora in fondo all'array)
@@ -540,7 +542,7 @@ void shortest_path(int n)
     /// per ogni nodo si aggiungono alla coda i suoi figli
 
     /// inserimento iniziale corretto solo se l'inizializzazione delle distanze è INFTY
-    for (int i = n; i < n_nodi; i++)
+    for (int i = 0; i < n_nodi; i++)
     {
         heap_insert(V_dist[i], i);
     }
@@ -551,7 +553,6 @@ void shortest_path(int n)
 
     while (heap_size != 0)
     {
-
         graph_print();
         print_heap_graph();
 
@@ -725,12 +726,15 @@ int main(int argc, char **argv)
     {
         /// arco costoso
         list_insert_front(E[i], arrivo, w_max - 2 * i);
+        /// loopback
+        list_insert_front(E[arrivo], i, w_max - 2 * i);
         /// arco 1
         if (i > 0)
             list_insert_front(E[i - 1], i, 1);
 
         heap_indexes[i] = i;
     }
+
     heap_indexes[n_nodi - 1] = n_nodi - 1;
 
     /// TASK: esercitarsi sulla generazione dei dati su cui lavorare tramite algoritmi
@@ -745,7 +749,7 @@ int main(int argc, char **argv)
         list_print(E[i]);
     }
 
-    shortest_path(0);
+    shortest_path(3);
     // shortest_path(44);
 
     if (graph)
