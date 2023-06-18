@@ -78,48 +78,48 @@ list<int> path;
 
 ifstream exam_file;
 
-// ofstream output_graph; // file di output per grafo
-int n_operazione = 0; // contatore di operazioni per visualizzare i vari step
+ofstream output_graph; // file di output per grafo
+int n_operazione = 0;  // contatore di operazioni per visualizzare i vari step
 
 /// @brief stampa il nodo nel file per dot
 /// @param n
-// void node_print(int n)
-// {
-//     /// calcolo massima distanza (eccetto infinito)
-//     float max_d = 0;
-//     for (int i = 0; i < n_nodi; i++)
-//         if (max_d < V_dist[i] && V_dist[i] < INFTY)
-//             max_d = V_dist[i];
+void node_print(int n)
+{
+    /// calcolo massima distanza (eccetto infinito)
+    float max_d = 0;
+    for (int i = 0; i < n_nodi; i++)
+        if (max_d < V_dist[i] && V_dist[i] < INFTY)
+            max_d = V_dist[i];
 
-//     output_graph << "node_" << n << "_" << n_operazione << endl;
-//     output_graph << "[ shape = box; ";
+    output_graph << "node_" << n << "_" << n_operazione << endl;
+    output_graph << "[ shape = box; ";
 
-//     float col = V_dist[n] / max_d; /// distanza in scala 0..1
-//     output_graph << "fillcolor = \"0.0 0.0 " << col / 2 + 0.5 << "\"; style=filled; width = 2; ";
+    float col = V_dist[n] / max_d; /// distanza in scala 0..1
+    output_graph << "fillcolor = \"0.0 0.0 " << col / 2 + 0.5 << "\"; style=filled; width = 2; ";
 
-//     if (V_dist[n] < INFTY)
-//         output_graph << "label = "
-//                      << "\"Idx: " << n << ", dist: " << V_dist[n] << "\" ];\n";
-//     else
-//         output_graph << "label = "
-//                      << "\"Idx: " << n << ", dist: INF\" ];\n";
+    if (V_dist[n] < INFTY)
+        output_graph << "label = "
+                     << "\"Idx: " << n << ", dist: " << V_dist[n] << "\" ];\n";
+    else
+        output_graph << "label = "
+                     << "\"Idx: " << n << ", dist: INF\" ];\n";
 
-//     graph_node_t *elem = E[n]->head;
-//     while (elem != NULL)
-//     { /// disegno arco
-//         output_graph << "node_" << n << "_" << n_operazione << " -> ";
-//         output_graph << "node_" << elem->val << "_" << n_operazione << " [ label=\"" << elem->w << "\", penwidth=" << elem->w / 100 * 10 << " ]\n";
-//         elem = elem->next;
-//     }
-// }
+    graph_node_t *elem = E[n]->head;
+    while (elem != NULL)
+    { /// disegno arco
+        output_graph << "node_" << n << "_" << n_operazione << " -> ";
+        output_graph << "node_" << elem->val << "_" << n_operazione << " [ label=\"" << elem->w << "\", penwidth=" << elem->w / 100 * 10 << " ]\n";
+        elem = elem->next;
+    }
+}
 
-// /// @brief genera il file dot per output visivo del grafo
-// void graph_print()
-// {
-//     for (int i = 0; i < n_nodi; i++)
-//         node_print(i);
-//     n_operazione++;
-// }
+/// @brief genera il file dot per output visivo del grafo
+void graph_print()
+{
+    for (int i = 0; i < n_nodi; i++)
+        node_print(i);
+    n_operazione++;
+}
 
 /// @brief crea una lista di adiacenza vuota
 /// @return puntatore alla lista
@@ -401,7 +401,7 @@ void shortest_path(int n)
 
     while (heap_size != 0)
     {
-        // graph_print();
+        graph_print();
 
         /// trova il minimo in coda - array
         // float best_dist = INFTY;
@@ -538,6 +538,22 @@ void reverse_weight()
     }
 }
 
+void print_node(tree_node_t *elem)
+{
+    cout << "STAMPA DEL NODO:" << endl;
+    cout << "parent { cost: " << elem->cost << " val: " << elem->val << " }" << endl;
+
+    if (elem->children_head != NULL)
+    {
+        tree_node_t *child = elem->children_head;
+        while (child != NULL)
+        {
+            cout << "child { cost: " << child->cost << " val: " << child->val << " }" << endl;
+            child = child->next;
+        }
+    }
+}
+
 /// @brief adds child at the end of the list
 /// @param parent
 /// @param child_idx
@@ -548,6 +564,8 @@ void add_children(tree_node_t *parent, int child_idx)
     new_child->val = child_idx;
     new_child->next = new tree_node_t;
     new_child->next = NULL;
+
+    // cout << "new_child { cost: " << new_child->cost << " val: " << new_child->val << " }" << endl;
 
     if (parent->children_head == NULL) // primo inserimento
     {
@@ -566,10 +584,36 @@ void add_children(tree_node_t *parent, int child_idx)
     }
 }
 
+/// @brief stampa il sottoalbero con radice = node  -bug-
+/// @param node
+// void print_tree(tree_node_t *node)
+// {
+//     if (node == NULL)
+//         return;
+
+//     cout << "pre: nodo " << node->val << " di costo " << node->cost << endl;
+
+//     if (node->children_head != NULL)
+//     {
+//         tree_node_t *elem = node->children_head;
+//         while (elem != NULL)
+//         {
+//             print_tree(elem->next);
+//         }
+//     }
+//     else
+//     {
+//         cout << "post: nodo " << node->val << " di costo " << node->cost << endl;
+//     }
+// }
+
 /// @brief crea l'albero partendo dai dati generati dall'algoritmo shortest path lanciato sul nodo n
 /// @param n indice del nodo su cui è stato eseguito shortest path
 void create_tree(tree_node_t *elem)
 {
+    // Euler Tour pre-order
+    // cout << elem->val << " ";
+
     for (int i = 0; i < n_nodi; i++)
     {
         if (V_prev[i] == elem->val)
@@ -579,12 +623,21 @@ void create_tree(tree_node_t *elem)
         }
     }
 
+    cout << "albero con radice = " << elem->val << endl;
+    print_node(elem);
+    cout << endl;
+
     tree_node_t *child = elem->children_head;
     while (child != NULL)
     {
         create_tree(child);
         child = child->next;
     }
+
+    // Euler Tour post-order
+    // cout << elem->val << " ";
+
+    // print_tree(elem);
 }
 
 /// @brief trova e stampa, tramite DFS, i 3 percorsi più comuni.
@@ -620,22 +673,27 @@ void find_best(tree_node_t *node)
         // se l'indice è migliore del terzo percorso, sostituisco, poi si procede per transitività, eseguendo swap
         if (val_index > index_third)
         {
+            cout << "percorso migliorato: " << visited_nodes << " / " << total_distance << " = " << val_index << " > " << index_third << endl;
             index_third = val_index;
             delete_path(third_path);
             third_path = new graph_node_t;
+            cout << "nuovo: ";
 
             graph_node_t *exam_path = third_path;
             for (auto const &i : path)
             {
+                std::cout << i << " -> ";
                 exam_path->val = i;
                 exam_path->next = new graph_node_t;
                 exam_path->next->val = -1; // se non viene modificato significa che è l'ultimo
                 exam_path = exam_path->next;
             }
+            cout << "end" << endl;
         }
 
         if (index_third > index_second)
         {
+            cout << "third > second (" << index_third << " > " << index_second << ")" << endl;
             // swap degli indici
             float tmp_idx = index_second;
             index_second = index_third;
@@ -648,6 +706,7 @@ void find_best(tree_node_t *node)
 
         if (index_second > index_first)
         {
+            cout << "second > first (" << index_second << " > " << index_first << ")" << endl;
             // swap degli indici
             float tmp_idx = index_first;
             index_first = index_second;
@@ -662,8 +721,6 @@ void find_best(tree_node_t *node)
 
 void print_paths()
 {
-
-    cout << "PERCORSI COMUNI CON INDICE INIZIALE " << tree_root->val << endl; 
     graph_node *it = first_path;
     cout << "1) IDX: " << index_first << "; path: ";
     while (it != NULL)
@@ -709,11 +766,11 @@ void print_paths()
 int main(int argc, char **argv)
 {
     exam_file.open("21-graph.txt", ios::app);
-    // output_graph.open("graph.dot");
-    // output_graph << "digraph g" << endl;
-    // output_graph << "{ " << endl;
-    // output_graph << "node [shape=none]" << endl;
-    // output_graph << "rankdir=\"LR\"" << endl;
+    output_graph.open("graph.dot");
+    output_graph << "digraph g" << endl;
+    output_graph << "{ " << endl;
+    output_graph << "node [shape=none]" << endl;
+    output_graph << "rankdir=\"LR\"" << endl;
 
     n_nodi = 49; // in alternativa si può consultare il file (numero massimo tra ID1 e ID2 per ogni riga)
 
@@ -734,19 +791,38 @@ int main(int argc, char **argv)
         heap_indexes[i] = i;
     }
 
+    // cout << "initialization OK" << endl;
+
     init_graph();
 
+    // cout << "init_graph() OK" << endl;
+
     reverse_weight();
+
+    // cout << "reverse_weight() OK" << endl;
 
     for (int i = 0; i < n_nodi; i++)
     {
         shortest_path(i); /// lanciare shortest path modificato
+
+        // cout << i << " shortest_path() OK" << endl;
+
+        // cout << endl
+        //      << "Arrays in " << i << ": " << endl;
+        // for (int j = 0; j < n_nodi; j++)
+        // {
+        //     cout << "V_dist[" << j << "]=" << V_dist[j] << endl;
+        //     cout << "V_prev[" << j << "]=" << V_prev[j] << endl;
+        // }
 
         tree_root = new tree_node_t;
         tree_root->val = i;
         tree_root->cost = V_dist[i];
         tree_root->next = NULL;
         create_tree(tree_root); /// generare un albero invertendo i dati contenuti in V_prev
+
+        // return 0;
+        // cout << i << " create_tree() OK" << endl;
 
         /// lanciare DFS sull'albero e valutare i(l) percorsi(o) migliori(e) dati dalla generazione del grafo
         /// +
@@ -759,12 +835,22 @@ int main(int argc, char **argv)
         print_paths();
 
         reset();
+
+        // cout << i << " reset() OK" << endl;
+
+        // cout << endl
+        //      << "Array resettati " << i << ": " << endl;
+        // for (int j = 0; j < n_nodi; j++)
+        // {
+        //     cout << "V_dist[" << j << "]=" << V_dist[j] << endl;
+        //     cout << "V_prev[" << j << "]=" << V_prev[j] << endl;
+        // }
     }
 
-    // graph_print();
+    graph_print();
 
-    // output_graph << "}" << endl;
+    output_graph << "}" << endl;
     exam_file.close();
-    // output_graph.close();
+    output_graph.close();
     return 0;
 }
